@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from 'react-redux'
+import Board from "./components/board/board";
 
 
 
 const App = () => {
   return (
+    <Board />
   );
 };
 

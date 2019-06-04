@@ -1,0 +1,33 @@
+.container{
+    margin: auto;
+}
+
+.header{
+    text-align: center;
+    background-color: gray;
+}
+
+.top, .mid, .bot {
+    display: flex;
+}
+
+.topLeft, .topMid, .topRight, .midLeft, .center, .midRight, .botLeft, .botMid, .botRight {
+    width: 100px;
+    height: 100px;
+}
+
+.topLeft, .topMid, .topRight{
+    border-bottom: solid 1px black;
+}
+
+.topLeft, .midLeft, .botLeft{
+    border-right: solid 1px black;
+}
+
+.topRight, .midRight, .botRight{
+    border-left: solid 1px black;
+}
+
+.botLeft, .botMid, .botRight{
+    border-top: solid 1px black;
+}
