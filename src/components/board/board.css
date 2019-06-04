@@ -5,6 +5,12 @@
 .header{
     text-align: center;
     background-color: gray;
+    color: white;
+}
+
+.board{
+    border: 5px solid gray;
+    padding: 2px;
 }
 
 .top, .mid, .bot {
@@ -12,22 +18,28 @@
 }
 
 .topLeft, .topMid, .topRight, .midLeft, .center, .midRight, .botLeft, .botMid, .botRight {
-    width: 100px;
-    height: 100px;
+    width: 10rem;
+    height: 10rem;
+    font-size: 10rem;
+    line-height: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    color: gray;
+    cursor: pointer;
 }
 
 .topLeft, .topMid, .topRight{
-    border-bottom: solid 1px black;
+    border-bottom: solid 2px;
 }
 
 .topLeft, .midLeft, .botLeft{
-    border-right: solid 1px black;
+    border-right: solid 2px;
 }
 
 .topRight, .midRight, .botRight{
-    border-left: solid 1px black;
+    border-left: solid 2px;
 }
 
 .botLeft, .botMid, .botRight{
-    border-top: solid 1px black;
+    border-top: solid 2px;
 }

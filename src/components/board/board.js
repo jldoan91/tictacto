@@ -7,6 +7,10 @@ const Board = class Board extends React.Component {
         this.state = {};
     }
 
+    onClick = (event) => {
+        !event.target.innerHTML ? event.target.innerHTML = 'X' : event.target.innerHTML = '';
+    }
+
     render() {
         return (
             <div className={styles.container}>
@@ -15,19 +19,19 @@ const Board = class Board extends React.Component {
                 </div>
                 <div className={styles.board}>
                     <div className={styles.top}>
-                        <div className={styles.topLeft}></div>
-                        <div className={styles.topMid}></div>
-                        <div className={styles.topRight}></div>
+                        <div onClick={this.onClick} className={styles.topLeft}></div>
+                        <div onClick={this.onClick} className={styles.topMid}></div>
+                        <div onClick={this.onClick} className={styles.topRight}></div>
                     </div>
                     <div className={styles.mid}>
-                        <div className={styles.midLeft}></div>
-                        <div className={styles.center}></div>
-                        <div className={styles.midRight}></div>
+                        <div onClick={this.onClick} className={styles.midLeft}></div>
+                        <div onClick={this.onClick} className={styles.center}></div>
+                        <div onClick={this.onClick} className={styles.midRight}></div>
                     </div>
                     <div className={styles.bot}>
-                        <div className={styles.botLeft}></div>
-                        <div className={styles.botMid}></div>
-                        <div className={styles.botRight}></div>
+                        <div onClick={this.onClick} className={styles.botLeft}></div>
+                        <div onClick={this.onClick} className={styles.botMid}></div>
+                        <div onClick={this.onClick} className={styles.botRight}></div>
                     </div>
                 </div>
             </div>
