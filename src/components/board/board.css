@@ -1,5 +1,16 @@
 .container{
     margin: auto;
+    text-align: center;
+}
+
+.btn{
+    margin: 1rem;
+    width: 7rem;
+    height: 3rem;
+    background: gray;
+    color: white;
+    border-radius: 0.5rem;
+    cursor: pointer;
 }
 
 .header{

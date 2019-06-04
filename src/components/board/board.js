@@ -34,6 +34,7 @@ const Board = class Board extends React.Component {
                         <div onClick={this.onClick} className={styles.botRight}></div>
                     </div>
                 </div>
+                <button className={styles.btn} type="button">Lock In</button>
             </div>
         );
     }
