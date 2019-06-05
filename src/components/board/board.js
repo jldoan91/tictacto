@@ -5,11 +5,11 @@ const Board = class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            move: 0,
+            move: 1,
             playerPiece: '',
             computerPiece: '',
             boxes: {
-                topLeft: 'O',
+                topLeft: '',
                 topMid: '',
                 topRight: '',
                 midLeft: '',
@@ -20,18 +20,42 @@ const Board = class Board extends React.Component {
                 botRight: ''
             },
             computerTurn: false,
-            gameActive: true
+            gameActive: true,
+            winner: ''
         };
     }
 
+    checkWin = () => {
+        const board = Object.values(this.state.boxes);
+        const winCond = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+        let xInd = [];
+        let oInd = [];
+
+        board.forEach((val, ind) => {
+            val === 'X' ? xInd.push(ind) : val === 'O' ? oInd.push(ind) : val;
+
+            // if (val === 'X') {
+            //     xInd.push(ind);
+            // } else if (val === 'O') {
+            //     oInd.push(ind);
+            // }
+        })
+
+        winCond.forEach(val => {
+
+        })
+    }
+
     onClick = (box) => {
+        // && !this.state.computerTurn
         if (!this.state.boxes[box]) {
             this.setState(prevState => ({
                 boxes: {
                     ...prevState.boxes,
                     [box]: this.state.playerPiece
                 },
-                computerTurn: true
+                computerTurn: true,
+                move: this.state.move + 1
             }))
         }
     }
@@ -62,7 +86,7 @@ const Board = class Board extends React.Component {
                     </div>
                     <div className={styles.board}>
                         <div className={styles.top}>
-                            <div disabled={this.state.computerTurn} onClick={() => this.onClick('topLeft')} className={styles.topLeft}>{this.state.boxes.topLeft}</div>
+                            <div onClick={() => this.onClick('topLeft')} className={styles.topLeft}>{this.state.boxes.topLeft}</div>
                             <div onClick={() => this.onClick('topMid')} className={styles.topMid}>{this.state.boxes.topMid}</div>
                             <div onClick={() => this.onClick('topRight')} className={styles.topRight}>{this.state.boxes.topRight}</div>
                         </div>
