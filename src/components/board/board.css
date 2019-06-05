@@ -1,23 +1,25 @@
+.piece{
+    cursor: pointer;
+    font-size: 3rem;
+    margin: 1rem;
+    border: 1px solid;
+    background: gray;
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
 .container{
     margin: auto;
     text-align: center;
 }
 
-/* .btn{
-    font-size: 1.5rem;
-    margin: 1rem;
-    width: 7rem;
-    height: 3rem;
-    background: gray;
-    color: white;
-    border-radius: 0.5rem;
-    cursor: pointer;
-} */
-
 .header{
+    font-size: 3rem;
     text-align: center;
     background-color: gray;
     color: white;
+    padding: 1rem;
+    margin: 1rem;
 }
 
 .board{
