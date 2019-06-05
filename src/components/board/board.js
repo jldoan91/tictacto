@@ -4,11 +4,15 @@ import styles from './board.css';
 const Board = class Board extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            move: 0,
+            selectedPiece: '',
+            turn: ''
+        };
     }
 
-    onClick = (event) => {
-        !event.target.innerHTML ? event.target.innerHTML = 'X' : event.target.innerHTML = '';
+    onClick = (box) => {
+        this.setState({})
     }
 
     render() {
@@ -19,7 +23,7 @@ const Board = class Board extends React.Component {
                 </div>
                 <div className={styles.board}>
                     <div className={styles.top}>
-                        <div onClick={this.onClick} className={styles.topLeft}></div>
+                        <div onClick={() => this.onClick('topLeft')} className={styles.topLeft}>{this.state.topLeft}</div>
                         <div onClick={this.onClick} className={styles.topMid}></div>
                         <div onClick={this.onClick} className={styles.topRight}></div>
                     </div>
@@ -34,7 +38,7 @@ const Board = class Board extends React.Component {
                         <div onClick={this.onClick} className={styles.botRight}></div>
                     </div>
                 </div>
-                <button className={styles.btn} type="button">Lock In</button>
+                {/* <button className={styles.btn} type="button">Lock In</button> */}
             </div>
         );
     }
