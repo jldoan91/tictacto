@@ -1,11 +1,13 @@
 .piece{
     cursor: pointer;
     font-size: 3rem;
-    margin: 1rem;
-    border: 1px solid;
+    margin: 2rem;
+    border-radius: 0.75rem;
     background: gray;
     color: white;
     padding: 0.5rem 1rem;
+    font-family: Verdana;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.75);
 }
 
 .container{
@@ -19,12 +21,15 @@
     background-color: gray;
     color: white;
     padding: 1rem;
-    margin: 1rem;
+    margin: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.75);
 }
 
 .board{
-    border: 5px solid gray;
-    padding: 2px;
+    border-radius: 0.75rem;
+    background: gray;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.75);
 }
 
 .top, .mid, .bot {
@@ -35,11 +40,12 @@
     width: 10rem;
     height: 10rem;
     font-size: 10rem;
-    line-height: 100%;
+    line-height: 10rem;
     text-align: center;
     text-transform: uppercase;
-    color: gray;
+    color: white;
     cursor: pointer;
+    font-family: Verdana;
 }
 
 .topLeft, .topMid, .topRight{
@@ -56,4 +62,46 @@
 
 .botLeft, .botMid, .botRight{
     border-top: solid 2px;
+}
+
+.topLeft {
+    border-radius: 0.75rem 0 0 0;
+}
+
+.topRight {
+    border-radius: 0 0.75rem 0 0;
+}
+
+.botLeft{
+    border-radius: 0 0 0 0.75rem;
+}
+
+.botRight{
+    border-radius: 0 0 0.75rem 0;
+}
+
+.winner {
+    font-size: 3rem;
+    color: white;
+    background: gray;
+    border-radius: 0.5rem;
+}
+
+.btn {
+    padding: 1rem;
+    background: gray;
+    border-radius: 0.75rem;
+    border-width: 3px;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.75);
+}
+
+.btn:focus {
+    outline: none
+}
+
+.green {
+    background: rgba(100, 255, 100, 0.5);
 }
