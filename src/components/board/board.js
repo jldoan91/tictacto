@@ -5,7 +5,6 @@ const Board = class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            move: 0,
             playerPiece: '',
             computerPiece: '',
             boxes: {
@@ -57,7 +56,7 @@ const Board = class Board extends React.Component {
         let xInd = [];
         let oInd = [];
 
-        if (this.state.move >= 9 && !this.state.winner) {
+        if (!board.includes('') && !this.state.winner) {
             this.setState({ gameActive: false, winner: 'Tie Game!' })
         }
 
@@ -105,7 +104,6 @@ const Board = class Board extends React.Component {
                     [box]: this.state.playerPiece
                 },
                 computerTurn: true,
-                move: this.state.move + 1
             }))
         }
     }
