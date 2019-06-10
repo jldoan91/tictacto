@@ -27,7 +27,6 @@ const Board = class Board extends React.Component {
 
     playAgain = () => {
         this.setState({
-            move: 1,
             playerPiece: '',
             computerPiece: '',
             boxes: {
@@ -48,10 +47,41 @@ const Board = class Board extends React.Component {
         })
     }
 
+    checkWin = (xArr, oArr) => {
+        const winCond = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+        const keys = Object.keys(this.state.boxes);
+        winCond.forEach(val => {
+                  let xCheck = xArr.filter(ind => {
+                      return val.includes(ind);
+                  })
+                  let oCheck = oArr.filter(ind => {
+                      return val.includes(ind);
+                  })
+      
+                  let winPieces = [];
+      
+                  //set state if x or o player has 3 in a row and fill winPieces array with winning squares
+                  if (xCheck.length === 3 && this.state.gameActive) {
+                      console.log('game over!')
+                      xCheck.forEach(val => {
+                          winPieces.push(keys[val]);
+                      })
+                      this.setState({ gameActive: false, winPieces: winPieces })
+                      this.state.playerPiece === 'X' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' });
+                  } else if (oCheck.length === 3 && this.state.gameActive) {
+                      console.log('game over!')
+                      oCheck.forEach(val => {
+                          winPieces.push(keys[val]);
+                      })
+                      this.setState({ gameActive: false, winPieces: winPieces })
+                      this.state.playerPiece === 'O' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' })
+                  }
+              })
+      }
+
     componentDidUpdate() {
         //create arrays for board values, placements, and possible wins
         const board = Object.values(this.state.boxes);
-        const keys = Object.keys(this.state.boxes);
         const winCond = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
         let xInd = [];
         let oInd = [];
@@ -66,34 +96,36 @@ const Board = class Board extends React.Component {
             val === 'X' ? xInd.push(ind) : val === 'O' ? oInd.push(ind) : val;
         })
 
+        this.checkWin(xInd, oInd);
+
         //loop over the win condition array to check for winning placements
-        winCond.forEach(val => {
-            let xCheck = xInd.filter(ind => {
-                return val.includes(ind);
-            })
-            let oCheck = oInd.filter(ind => {
-                return val.includes(ind);
-            })
+        // winCond.forEach(val => {
+        //     let xCheck = xInd.filter(ind => {
+        //         return val.includes(ind);
+        //     })
+        //     let oCheck = oInd.filter(ind => {
+        //         return val.includes(ind);
+        //     })
 
-            let winPieces = [];
+        //     let winPieces = [];
 
-            //set state if x or o player has 3 in a row and fill winPieces array with winning squares
-            if (xCheck.length === 3 && this.state.gameActive) {
-                console.log('game over!')
-                xCheck.forEach(val => {
-                    winPieces.push(keys[val]);
-                })
-                this.setState({ gameActive: false, winPieces: winPieces })
-                this.state.playerPiece === 'X' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' });
-            } else if (oCheck.length === 3 && this.state.gameActive) {
-                console.log('game over!')
-                oCheck.forEach(val => {
-                    winPieces.push(keys[val]);
-                })
-                this.setState({ gameActive: false, winPieces: winPieces })
-                this.state.playerPiece === 'O' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' })
-            }
-        })
+        //     //set state if x or o player has 3 in a row and fill winPieces array with winning squares
+        //     if (xCheck.length === 3 && this.state.gameActive) {
+        //         console.log('game over!')
+        //         xCheck.forEach(val => {
+        //             winPieces.push(keys[val]);
+        //         })
+        //         this.setState({ gameActive: false, winPieces: winPieces })
+        //         this.state.playerPiece === 'X' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' });
+        //     } else if (oCheck.length === 3 && this.state.gameActive) {
+        //         console.log('game over!')
+        //         oCheck.forEach(val => {
+        //             winPieces.push(keys[val]);
+        //         })
+        //         this.setState({ gameActive: false, winPieces: winPieces })
+        //         this.state.playerPiece === 'O' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' })
+        //     }
+        // })
 
     }
 
