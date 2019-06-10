@@ -80,6 +80,24 @@ const Board = class Board extends React.Component {
         })
     }
 
+    miniMax = (board, computer) => {
+        const avPos = [];
+        //loop through board to grab available positions
+        board.forEach((val, ind) => {
+            if (!val) {
+                avPos.push(ind);
+            }
+        })
+        let bestMove = -10;
+
+
+    }
+
+    computerTakeTurn = () => {
+        this.miniMax(Object.values(this.state.boxes), this.state.computerPiece)
+        this.setState({ computerTurn: false })
+    }
+
     componentDidUpdate() {
         //create array of piece placements and piece keys
         const keys = Object.keys(this.state.boxes);
@@ -98,6 +116,9 @@ const Board = class Board extends React.Component {
         })
 
         this.checkWin(xInd, oInd, keys);
+        if (this.state.computerTurn) {
+            this.computerTakeTurn();
+        }
     }
 
     onClick = (box) => {
