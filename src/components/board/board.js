@@ -5,8 +5,8 @@ const Board = class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            playerPiece: '',
-            computerPiece: '',
+            player: '',
+            computer: '',
             boxes: {
                 topLeft: '',
                 topMid: '',
@@ -20,15 +20,15 @@ const Board = class Board extends React.Component {
             },
             computerTurn: false,
             gameActive: true,
-            winner: '',
+            winningMsg: '',
             winPieces: []
         };
     }
 
     playAgain = () => {
         this.setState({
-            playerPiece: '',
-            computerPiece: '',
+            player: '',
+            computer: '',
             boxes: {
                 topLeft: '',
                 topMid: '',
@@ -68,34 +68,16 @@ const Board = class Board extends React.Component {
                     winPieces.push(keys[val]);
                 })
                 this.setState({ gameActive: false, winPieces: winPieces })
-                this.state.playerPiece === 'X' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' });
+                this.state.player === 'X' ? this.setState({ winningMsg: 'You Won!' }) : this.setState({ winningMsg: 'The Computer Won.' });
             } else if (oCheck.length === 3 && this.state.gameActive) {
                 console.log('game over!')
                 oCheck.forEach(val => {
                     winPieces.push(keys[val]);
                 })
                 this.setState({ gameActive: false, winPieces: winPieces })
-                this.state.playerPiece === 'O' ? this.setState({ winner: 'You Won!' }) : this.setState({ winner: 'The Computer Won.' })
+                this.state.player === 'O' ? this.setState({ winningMsg: 'You Won!' }) : this.setState({ winningMsg: 'The Computer Won.' })
             }
         })
-    }
-
-    miniMax = (board, computer) => {
-        const avPos = [];
-        //loop through board to grab available positions
-        board.forEach((val, ind) => {
-            if (!val) {
-                avPos.push(ind);
-            }
-        })
-        let bestMove = -10;
-
-
-    }
-
-    computerTakeTurn = () => {
-        this.miniMax(Object.values(this.state.boxes), this.state.computerPiece)
-        this.setState({ computerTurn: false })
     }
 
     componentDidUpdate() {
@@ -106,8 +88,8 @@ const Board = class Board extends React.Component {
         let oInd = [];
 
         //tie game if board is full and no winner declared
-        if (!board.includes('') && !this.state.winner) {
-            this.setState({ gameActive: false, winner: 'Tie Game!' })
+        if (!board.includes('') && !this.state.winningMsg) {
+            this.setState({ gameActive: false, winningMsg: 'Tie Game!' })
         }
 
         //fill x and o arrays with placement of pieces
@@ -116,9 +98,6 @@ const Board = class Board extends React.Component {
         })
 
         this.checkWin(xInd, oInd, keys);
-        if (this.state.computerTurn) {
-            this.computerTakeTurn();
-        }
     }
 
     onClick = (box) => {
@@ -128,7 +107,7 @@ const Board = class Board extends React.Component {
             this.setState(prevState => ({
                 boxes: {
                     ...prevState.boxes,
-                    [box]: this.state.playerPiece
+                    [box]: this.state.player
                 },
                 computerTurn: true,
             }))
@@ -136,11 +115,11 @@ const Board = class Board extends React.Component {
     }
 
     selectPiece = (piece) => {
-        (piece === 'X') ? this.setState({ playerPiece: 'X', computerPiece: 'O' }) : this.setState({ playerPiece: 'O', computerPiece: 'X' })
+        (piece === 'X') ? this.setState({ player: 'X', computer: 'O' }) : this.setState({ player: 'O', computer: 'X' })
     }
 
     render() {
-        if (!this.state.playerPiece && !this.state.computerPiece) {
+        if (!this.state.player && !this.state.computer) {
             return (
                 <div className={styles.container}>
                     <div className={styles.header}>
@@ -177,7 +156,7 @@ const Board = class Board extends React.Component {
                         </div >
                     </div >
                     <div className={styles.winner}>
-                        <p>{this.state.winner}</p>
+                        <p>{this.state.winningMsg}</p>
                     </div>
                     <div>
                         {!this.state.gameActive ? <button type="button" onClick={this.playAgain} className={styles.btn}>Play Again!</button> : this.state.gameActive}
