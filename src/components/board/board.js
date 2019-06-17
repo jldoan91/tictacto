@@ -20,7 +20,7 @@ const Board = class Board extends React.Component {
             },
             computerTurn: false,
             gameActive: true,
-            winningMsg: '',
+            winMsg: '',
             winPieces: []
         };
     }
@@ -42,66 +42,107 @@ const Board = class Board extends React.Component {
             },
             computerTurn: false,
             gameActive: true,
-            winner: '',
+            winMsg: '',
             winPieces: []
         })
     }
 
-    checkWin = (xArr, oArr, keys) => {
-        const winCond = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
-
-        //loop over win conditions to check if anyone has 3 in a row and store winning pieces in state
-        winCond.forEach(val => {
-            let xCheck = xArr.filter(ind => {
-                return val.includes(ind);
-            })
-            let oCheck = oArr.filter(ind => {
-                return val.includes(ind);
-            })
-
-            let winPieces = [];
-
-            //set state if x or o player has 3 in a row and fill winPieces array with winning squares
-            if (xCheck.length === 3 && this.state.gameActive) {
-                console.log('game over!')
-                xCheck.forEach(val => {
-                    winPieces.push(keys[val]);
-                })
-                this.setState({ gameActive: false, winPieces: winPieces })
-                this.state.player === 'X' ? this.setState({ winningMsg: 'You Won!' }) : this.setState({ winningMsg: 'The Computer Won.' });
-            } else if (oCheck.length === 3 && this.state.gameActive) {
-                console.log('game over!')
-                oCheck.forEach(val => {
-                    winPieces.push(keys[val]);
-                })
-                this.setState({ gameActive: false, winPieces: winPieces })
-                this.state.player === 'O' ? this.setState({ winningMsg: 'You Won!' }) : this.setState({ winningMsg: 'The Computer Won.' })
-            }
-        })
-    }
-
-    componentDidUpdate() {
-        //create array of piece placements and piece keys
+    checkWin = (board, player) => {
+        let winner;
+        let winPieces = [];
         const keys = Object.keys(this.state.boxes);
-        const board = Object.values(this.state.boxes);
-        let xInd = [];
-        let oInd = [];
+        const winCond = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
 
-        //tie game if board is full and no winner declared
-        if (!board.includes('') && !this.state.winningMsg) {
-            this.setState({ gameActive: false, winningMsg: 'Tie Game!' })
-        }
+        let playerArr = [];
 
-        //fill x and o arrays with placement of pieces
         board.forEach((val, ind) => {
-            val === 'X' ? xInd.push(ind) : val === 'O' ? oInd.push(ind) : val;
-        })
+            if (val === player) {
+                playerArr.push(ind);
+            }
+        });
 
-        this.checkWin(xInd, oInd, keys);
-    }
+        winCond.forEach(val => {
+            let playerCheck = playerArr.filter(ind => {
+                return val.includes(ind);
+            });
+            if (playerCheck.length === 3) {
+                playerCheck.forEach(val => {
+                    winPieces.push(keys[val]);
+                });
+                winner = { winner: player, pieces: winPieces };
+            }
+        });
+        return winner;
+    };
+
+    // miniMax = (board, player) => {
+    //     //build array of available positions from board
+    //     let avPos = [];
+    //     board.forEach((val, ind) => {
+    //         if (!val) {
+    //             avPos.push(ind);
+    //         }
+    //     })
+
+    //     if (this.checkWin(board, player) === this.state.player) {
+    //         return { score: 10 }
+    //     } else if (this.checkWin(board, player) === this.state.computer) {
+    //         return { score: -10 }
+    //     } else if (avPos.length === 0) {
+    //         return { score: 0 }
+    //     }
+
+    //     let moves = [];
+    //     for (let i = 0; i < avPos.length; i++) {
+    //         let move = {};
+    //         move.index = avPos[i]
+    //         board[avPos[i]] = player;
+
+    //         if (player == this.state.computer) {
+    //             let result = this.miniMax(board, this.state.computer)
+    //             move.score = result.score;
+    //         } else {
+    //             let result = this.miniMax(board, this.state.player)
+    //             move.score = result.score;
+    //         }
+    //         avPos[i] = move.index;
+
+    //         moves.push(move);
+    //     }
+
+    //     // return moves;
+
+    //     let bestMove;
+    //     if (player === this.state.computer) {
+    //         let bestScore = -100;
+    //         for (let i = 0; i < moves.length; i++) {
+    //             if (moves[i].score > bestScore) {
+    //                 bestScore = moves[i].score;
+    //                 bestMove = i;
+    //             }
+    //         }
+    //     } else {
+    //         let bestScore = 100;
+    //         for (let i = 0; i < moves.length; i++) {
+    //             if (moves[i].score < bestScore) {
+    //                 bestScore = moves[i].score;
+    //                 bestMove = i;
+    //             }
+    //         }
+    //     }
+    //     return moves[bestMove];
+    // }
 
     onClick = (box) => {
-        //update state based on which box is clicked and which piece player selected
         // && !this.state.computerTurn
         if (!this.state.boxes[box] && this.state.gameActive) {
             this.setState(prevState => ({
@@ -109,13 +150,74 @@ const Board = class Board extends React.Component {
                     ...prevState.boxes,
                     [box]: this.state.player
                 },
-                computerTurn: true,
+                computerTurn: true
             }))
         }
     }
 
-    selectPiece = (piece) => {
+    // aiTurn = (board) => {
+    //     //build array of available positions
+    //     let keys = Object.keys(this.state.boxes);
+    //     let avPos = [];
+    //     board.forEach((val, ind) => {
+    //         if (!val) {
+    //             avPos.push(ind);
+    //         }
+    //     })
+
+    //     //if center spot is open place computer piece there
+    //     if (avPos.includes(4)) {
+    //         this.setState(prevState => ({
+    //             boxes: {
+    //                 ...prevState.boxes,
+    //                 [keys[4]]: this.state.computer
+    //             },
+    //             computerTurn: false
+    //         }))
+    //         //else place in the top left
+    //     } else if (avPos.includes(0)) {
+    //         this.setState(prevState => ({
+    //             boxes: {
+    //                 ...prevState.boxes,
+    //                 [keys[0]]: this.state.computer
+    //             },
+    //             computerTurn: false
+    //         }))
+    //         //else call the minimax algorithm to pick a spot
+    //     } else if (avPos.length <= 6) {
+    //         let move = this.miniMax(board, this.state.computer);
+    //         this.setState(prevState => ({
+    //             boxes: {
+    //                 ...prevState.boxes,
+    //                 [keys[move.index]]: this.state.computer
+    //             },
+    //             computerTurn: false
+    //         }))
+    //     }
+
+
+    // }
+
+    selectPiece = piece => {
         (piece === 'X') ? this.setState({ player: 'X', computer: 'O' }) : this.setState({ player: 'O', computer: 'X' })
+    }
+
+    componentDidUpdate() {
+        const board = Object.values(this.state.boxes);
+
+        const playerCheck = this.checkWin(board, this.state.player);
+        const computerCheck = this.checkWin(board, this.state.computer);
+
+        //if either check has a winner set state for winning message and pieces
+        if (playerCheck && this.state.gameActive) {
+            this.setState({ gameActive: false, winMsg: `${playerCheck.winner} wins!`, winPieces: playerCheck.pieces })
+        } else if (computerCheck && this.state.gameActive) {
+            this.setState({ gameActive: false, winMsg: `${computerCheck.winner} wins!`, winPieces: computerCheck.pieces })
+        }
+
+        // if (this.state.computerTurn && this.state.gameActive) {
+        //     this.aiTurn(board)
+        // }
     }
 
     render() {
@@ -131,8 +233,7 @@ const Board = class Board extends React.Component {
                     </div>
                 </div>
             );
-        }
-        else {
+        } else {
             return (
                 <div className={styles.container}>
                     <div className={styles.header}>
@@ -156,10 +257,10 @@ const Board = class Board extends React.Component {
                         </div >
                     </div >
                     <div className={styles.winner}>
-                        <p>{this.state.winningMsg}</p>
+                        <p>{this.state.winMsg}</p>
                     </div>
                     <div>
-                        {!this.state.gameActive ? <button type="button" onClick={this.playAgain} className={styles.btn}>Play Again!</button> : this.state.gameActive}
+                        {!this.state.gameActive ? <button type="button" onClick={() => this.playAgain()} className={styles.btn}>Play Again!</button> : this.state.gameActive}
                     </div>
                 </div >
             );
