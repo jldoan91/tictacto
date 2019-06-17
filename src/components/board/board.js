@@ -205,13 +205,13 @@ const Board = class Board extends React.Component {
     componentDidUpdate() {
         const board = Object.values(this.state.boxes);
 
-        const playerCheck = this.checkWin(board, this.state.player);
-        const computerCheck = this.checkWin(board, this.state.computer);
+        let playerCheck = this.checkWin(board, this.state.player);
+        let computerCheck = this.checkWin(board, this.state.computer);
 
         //if either check has a winner set state for winning message and pieces
-        if (playerCheck && this.state.gameActive) {
+        if (playerCheck && !computerCheck && this.state.gameActive) {
             this.setState({ gameActive: false, winMsg: `${playerCheck.winner} wins!`, winPieces: playerCheck.pieces })
-        } else if (computerCheck && this.state.gameActive) {
+        } else if (computerCheck && !playerCheck && this.state.gameActive) {
             this.setState({ gameActive: false, winMsg: `${computerCheck.winner} wins!`, winPieces: computerCheck.pieces })
         }
 
