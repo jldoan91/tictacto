@@ -23,28 +23,19 @@ const Board = class Board extends React.Component {
             winMsg: '',
             winPieces: []
         };
+        this.baseState = this.state
+    }
+
+    static getDerivedStateFromError(error) {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, info) {
+        logErrorToMyService(error, info)
     }
 
     playAgain = () => {
-        this.setState({
-            player: '',
-            computer: '',
-            boxes: {
-                topLeft: '',
-                topMid: '',
-                topRight: '',
-                midLeft: '',
-                center: '',
-                midRight: '',
-                botLeft: '',
-                botMid: '',
-                botRight: ''
-            },
-            computerTurn: false,
-            gameActive: true,
-            winMsg: '',
-            winPieces: []
-        })
+        this.setState(this.baseState)
     }
 
     checkWin = (board, player) => {
@@ -84,63 +75,64 @@ const Board = class Board extends React.Component {
         return winner;
     };
 
-    // miniMax = (board, player) => {
-    //     //build array of available positions from board
-    //     let avPos = [];
-    //     board.forEach((val, ind) => {
-    //         if (!val) {
-    //             avPos.push(ind);
-    //         }
-    //     })
+    miniMax = (board, player) => {
+        //build array of available positions from board
+        let avPos = [];
+        board.forEach((val, ind) => {
+            if (!val) {
+                avPos.push(ind);
+            }
+        })
 
-    //     if (this.checkWin(board, player) === this.state.player) {
-    //         return { score: 10 }
-    //     } else if (this.checkWin(board, player) === this.state.computer) {
-    //         return { score: -10 }
-    //     } else if (avPos.length === 0) {
-    //         return { score: 0 }
-    //     }
 
-    //     let moves = [];
-    //     for (let i = 0; i < avPos.length; i++) {
-    //         let move = {};
-    //         move.index = avPos[i]
-    //         board[avPos[i]] = player;
+        if (this.checkWin(board, player) === this.state.player) {
+            return { score: 10 }
+        } else if (this.checkWin(board, player) === this.state.computer) {
+            return { score: -10 }
+        } else if (avPos.length === 0) {
+            return { score: 0 }
+        }
 
-    //         if (player == this.state.computer) {
-    //             let result = this.miniMax(board, this.state.computer)
-    //             move.score = result.score;
-    //         } else {
-    //             let result = this.miniMax(board, this.state.player)
-    //             move.score = result.score;
-    //         }
-    //         avPos[i] = move.index;
+        let moves = [];
+        for (let i = 0; i < avPos.length; i++) {
+            let move = {};
+            move.index = avPos[i]
+            board[avPos[i]] = player;
 
-    //         moves.push(move);
-    //     }
+            if (player == this.state.computer) {
+                let result = this.miniMax(board, this.state.computer)
+                move.score = result.score;
+            } else {
+                let result = this.miniMax(board, this.state.player)
+                move.score = result.score;
+            }
+            avPos[i] = move.index;
 
-    //     // return moves;
+            moves.push(move);
+        }
 
-    //     let bestMove;
-    //     if (player === this.state.computer) {
-    //         let bestScore = -100;
-    //         for (let i = 0; i < moves.length; i++) {
-    //             if (moves[i].score > bestScore) {
-    //                 bestScore = moves[i].score;
-    //                 bestMove = i;
-    //             }
-    //         }
-    //     } else {
-    //         let bestScore = 100;
-    //         for (let i = 0; i < moves.length; i++) {
-    //             if (moves[i].score < bestScore) {
-    //                 bestScore = moves[i].score;
-    //                 bestMove = i;
-    //             }
-    //         }
-    //     }
-    //     return moves[bestMove];
-    // }
+        // return moves;
+
+        let bestMove;
+        if (player === this.state.computer) {
+            let bestScore = -100;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        } else {
+            let bestScore = 100;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score < bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+        return moves[bestMove];
+    }
 
     onClick = (box) => {
         // && !this.state.computerTurn
@@ -155,48 +147,48 @@ const Board = class Board extends React.Component {
         }
     }
 
-    // aiTurn = (board) => {
-    //     //build array of available positions
-    //     let keys = Object.keys(this.state.boxes);
-    //     let avPos = [];
-    //     board.forEach((val, ind) => {
-    //         if (!val) {
-    //             avPos.push(ind);
-    //         }
-    //     })
+    aiTurn = (board) => {
+        //build array of available positions
+        let keys = Object.keys(this.state.boxes);
+        let avPos = [];
+        board.forEach((val, ind) => {
+            if (!val) {
+                avPos.push(ind);
+            }
+        })
 
-    //     //if center spot is open place computer piece there
-    //     if (avPos.includes(4)) {
-    //         this.setState(prevState => ({
-    //             boxes: {
-    //                 ...prevState.boxes,
-    //                 [keys[4]]: this.state.computer
-    //             },
-    //             computerTurn: false
-    //         }))
-    //         //else place in the top left
-    //     } else if (avPos.includes(0)) {
-    //         this.setState(prevState => ({
-    //             boxes: {
-    //                 ...prevState.boxes,
-    //                 [keys[0]]: this.state.computer
-    //             },
-    //             computerTurn: false
-    //         }))
-    //         //else call the minimax algorithm to pick a spot
-    //     } else if (avPos.length <= 6) {
-    //         let move = this.miniMax(board, this.state.computer);
-    //         this.setState(prevState => ({
-    //             boxes: {
-    //                 ...prevState.boxes,
-    //                 [keys[move.index]]: this.state.computer
-    //             },
-    //             computerTurn: false
-    //         }))
-    //     }
+        //if center spot is open place computer piece there
+        if (avPos.includes(4)) {
+            this.setState(prevState => ({
+                boxes: {
+                    ...prevState.boxes,
+                    [keys[4]]: this.state.computer
+                },
+                computerTurn: false
+            }))
+            //else place in the top left
+        } else if (avPos.includes(0)) {
+            this.setState(prevState => ({
+                boxes: {
+                    ...prevState.boxes,
+                    [keys[0]]: this.state.computer
+                },
+                computerTurn: false
+            }))
+            //else call the minimax algorithm to pick a spot
+        } else if (avPos.length <= 6) {
+            let move = this.miniMax(board, this.state.computer);
+            this.setState(prevState => ({
+                boxes: {
+                    ...prevState.boxes,
+                    [keys[move.index]]: this.state.computer
+                },
+                computerTurn: false
+            }))
+        }
 
 
-    // }
+    }
 
     selectPiece = piece => {
         (piece === 'X') ? this.setState({ player: 'X', computer: 'O' }) : this.setState({ player: 'O', computer: 'X' })
@@ -215,9 +207,9 @@ const Board = class Board extends React.Component {
             this.setState({ gameActive: false, winMsg: `${computerCheck.winner} wins!`, winPieces: computerCheck.pieces })
         }
 
-        // if (this.state.computerTurn && this.state.gameActive) {
-        //     this.aiTurn(board)
-        // }
+        if (this.state.computerTurn && this.state.gameActive) {
+            this.aiTurn(board)
+        }
     }
 
     render() {
