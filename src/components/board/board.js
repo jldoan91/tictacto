@@ -75,7 +75,7 @@ const Board = class Board extends React.Component {
         return winner;
     };
 
-    miniMax = (board, player) => {
+    miniMax = (board, player, depth) => {
         //build array of available positions from board
         let avPos = [];
         board.forEach((val, ind) => {
@@ -85,13 +85,15 @@ const Board = class Board extends React.Component {
         })
 
 
-        if (this.checkWin(board, player) === this.state.player) {
-            return { score: 10 }
-        } else if (this.checkWin(board, player) === this.state.computer) {
-            return { score: -10 }
+        if (this.checkWin(board, this.state.player)) {
+            return { score: 10 - depth }
+        } else if (this.checkWin(board, this.state.computer)) {
+            return { score: depth - 10 }
         } else if (avPos.length === 0) {
             return { score: 0 }
         }
+
+        depth = depth + 1;
 
         let moves = [];
         for (let i = 0; i < avPos.length; i++) {
@@ -100,10 +102,10 @@ const Board = class Board extends React.Component {
             board[avPos[i]] = player;
 
             if (player == this.state.computer) {
-                let result = this.miniMax(board, this.state.computer)
+                let result = this.miniMax(board, this.state.computer, depth)
                 move.score = result.score;
             } else {
-                let result = this.miniMax(board, this.state.player)
+                let result = this.miniMax(board, this.state.player, depth)
                 move.score = result.score;
             }
             avPos[i] = move.index;
@@ -111,18 +113,10 @@ const Board = class Board extends React.Component {
             moves.push(move);
         }
 
-        // return moves;
+        // console.log(moves);
 
         let bestMove;
         if (player === this.state.computer) {
-            let bestScore = -100;
-            for (let i = 0; i < moves.length; i++) {
-                if (moves[i].score > bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                }
-            }
-        } else {
             let bestScore = 100;
             for (let i = 0; i < moves.length; i++) {
                 if (moves[i].score < bestScore) {
@@ -130,13 +124,21 @@ const Board = class Board extends React.Component {
                     bestMove = i;
                 }
             }
+        } else {
+            let bestScore = -100;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
         }
+        console.log(moves);
         return moves[bestMove];
     }
 
     onClick = (box) => {
-        // && !this.state.computerTurn
-        if (!this.state.boxes[box] && this.state.gameActive) {
+        if (!this.state.boxes[box] && this.state.gameActive && !this.state.computerTurn) {
             this.setState(prevState => ({
                 boxes: {
                     ...prevState.boxes,
@@ -177,7 +179,7 @@ const Board = class Board extends React.Component {
             }))
             //else call the minimax algorithm to pick a spot
         } else if (avPos.length <= 6) {
-            let move = this.miniMax(board, this.state.computer);
+            let move = this.miniMax(board, this.state.computer, 1);
             this.setState(prevState => ({
                 boxes: {
                     ...prevState.boxes,
@@ -196,6 +198,12 @@ const Board = class Board extends React.Component {
 
     componentDidUpdate() {
         const board = Object.values(this.state.boxes);
+        let avPos = [];
+        board.forEach((val, ind) => {
+            if (!val) {
+                avPos.push(ind);
+            }
+        })
 
         let playerCheck = this.checkWin(board, this.state.player);
         let computerCheck = this.checkWin(board, this.state.computer);
@@ -205,6 +213,8 @@ const Board = class Board extends React.Component {
             this.setState({ gameActive: false, winMsg: `${playerCheck.winner} wins!`, winPieces: playerCheck.pieces })
         } else if (computerCheck && !playerCheck && this.state.gameActive) {
             this.setState({ gameActive: false, winMsg: `${computerCheck.winner} wins!`, winPieces: computerCheck.pieces })
+        } else if (!computerCheck && !playerCheck && this.state.gameActive && avPos.length === 0) {
+            this.setState({ gameActive: false, winMsg: 'Tie Game!' })
         }
 
         if (this.state.computerTurn && this.state.gameActive) {
