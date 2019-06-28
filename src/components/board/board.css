@@ -105,3 +105,12 @@
 .green {
     background: rgba(100, 255, 100, 0.5);
 }
+
+@media (max-width: 600px) {
+    html{
+        font-size: .25rem;
+    }
+    .container{
+        width: 100vw;
+    }
+}
