@@ -26,14 +26,6 @@ const Board = class Board extends React.Component {
         this.baseState = this.state
     }
 
-    static getDerivedStateFromError(error) {
-        return { hasError: true };
-    }
-
-    componentDidCatch(error, info) {
-        logErrorToMyService(error, info)
-    }
-
     playAgain = () => {
         this.setState(this.baseState)
     }
@@ -88,32 +80,29 @@ const Board = class Board extends React.Component {
         if (this.checkWin(board, this.state.player)) {
             return { score: 10 - depth }
         } else if (this.checkWin(board, this.state.computer)) {
-            return { score: depth - 10 }
+            return { score: -10 + depth }
         } else if (avPos.length === 0) {
             return { score: 0 }
         }
 
-        depth = depth + 1;
-
         let moves = [];
         for (let i = 0; i < avPos.length; i++) {
-            let move = {};
+            var move = {};
             move.index = avPos[i]
             board[avPos[i]] = player;
 
             if (player == this.state.computer) {
-                let result = this.miniMax(board, this.state.computer, depth)
-                move.score = result.score;
-            } else {
                 let result = this.miniMax(board, this.state.player, depth)
                 move.score = result.score;
+            } else {
+                let result = this.miniMax(board, this.state.computer, depth + 1)
+                move.score = result.score;
             }
-            avPos[i] = move.index;
+
+            board[avPos[i]] = '';
 
             moves.push(move);
         }
-
-        // console.log(moves);
 
         let bestMove;
         if (player === this.state.computer) {
@@ -179,11 +168,11 @@ const Board = class Board extends React.Component {
             }))
             //else call the minimax algorithm to pick a spot
         } else if (avPos.length <= 6) {
-            let move = this.miniMax(board, this.state.computer, 1);
+            let move = this.miniMax(board, this.state.computer, 0).index;
             this.setState(prevState => ({
                 boxes: {
                     ...prevState.boxes,
-                    [keys[move.index]]: this.state.computer
+                    [keys[move]]: this.state.computer
                 },
                 computerTurn: false
             }))
