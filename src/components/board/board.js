@@ -158,7 +158,8 @@ const Board = class Board extends React.Component {
                 computerTurn: false
             }))
             //else place in the top left
-        } else if (avPos.includes(0)) {
+        }
+        else if (avPos.includes(0) && this.state.boxes.center === this.state.player) {
             this.setState(prevState => ({
                 boxes: {
                     ...prevState.boxes,
@@ -167,7 +168,7 @@ const Board = class Board extends React.Component {
                 computerTurn: false
             }))
             //else call the minimax algorithm to pick a spot
-        } else if (avPos.length <= 6) {
+        } else {
             let move = this.miniMax(board, this.state.computer, 0).index;
             this.setState(prevState => ({
                 boxes: {
