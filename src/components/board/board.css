@@ -49,19 +49,19 @@
 }
 
 .topLeft, .topMid, .topRight{
-    border-bottom: solid 2px;
+    border-bottom: solid 10px;
 }
 
 .topLeft, .midLeft, .botLeft{
-    border-right: solid 2px;
+    border-right: solid 10px;
 }
 
 .topRight, .midRight, .botRight{
-    border-left: solid 2px;
+    border-left: solid 10px;
 }
 
 .botLeft, .botMid, .botRight{
-    border-top: solid 2px;
+    border-top: solid 10px;
 }
 
 .topLeft {
