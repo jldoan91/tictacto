@@ -5,6 +5,7 @@ module.exports = {
     polyfill: 'babel-polyfill',
     app: './src/index.js',
   },
+  devtool: 'nosources-source-map',
   devServer: {
     historyApiFallback: true
   },
