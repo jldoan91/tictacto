@@ -5,7 +5,7 @@ module.exports = {
     polyfill: 'babel-polyfill',
     app: './src/index.js',
   },
-  devtool: 'source-map',
+  // devtool: 'source-map',
   devServer: {
     historyApiFallback: true
   },
@@ -35,12 +35,14 @@ module.exports = {
         use: [
           'style-loader',
           { loader: 'css-loader', options: { importLoaders: 1, modules: true, localIdentName: '[folder]__[local]--[hash:base64:5]' } },
-          { loader: 'postcss-loader', options: {
-            ident: 'postcss',
-            plugins: () => [
-              postcssNesting(/* pluginOptions */)
-            ]
-          } }
+          {
+            loader: 'postcss-loader', options: {
+              ident: 'postcss',
+              plugins: () => [
+                postcssNesting(/* pluginOptions */)
+              ]
+            }
+          }
         ]
       },
       {
