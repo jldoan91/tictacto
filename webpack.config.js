@@ -1,10 +1,12 @@
 const postcssNesting = require('postcss-nesting');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+var buildType = process.env.NODE_ENV;
 module.exports = {
   entry: {
     polyfill: 'babel-polyfill',
     app: './src/index.js',
   },
+  devtool: 'source-map',
   devServer: {
     historyApiFallback: true
   },
