@@ -23,7 +23,7 @@ const Board = class Board extends React.Component {
             winMsg: '',
             winPieces: []
         };
-        this.baseState = this.state
+        this.baseState = { ...this.state }
     }
 
     playAgain = () => {
